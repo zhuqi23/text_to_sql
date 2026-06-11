@@ -7,8 +7,22 @@ spring:
   main:
     allow-circular-references: true
   datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
     druid:
-      driver-class-name: ${spring.datasource.driver-class-name}
-      url: jdbc:mysql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.database}?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
-      username: ${spring.datasource.username}
-      password: ${spring.datasource.password}
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+
+mybatis:
+  #mapper配置文件
+  # 1. mapper-locations: Mapper XML 文件的位置
+  mapper-locations: classpath:mapper/*.xml
+  # 2. type-aliases-package: 类型别名包，XML中可以直接写类名而不需要全限
+  type-aliases-package: com.text_to_sql.text_to_sql.pojo.entity
+  # 3. type-handlers-package: 自动扫描并注册自定义的 TypeHandler
+#  type-handlers-package: com.text_to_sql.text_to_sql.handler
+  configuration:
+    # 4. 开启驼峰命名: user_name -> userName
+    map-underscore-to-camel-case: true
+    # 5. default-enum-type-handler: 默认的枚举类型处理器, 有自定义TypeHandler就不用这个
+#    default-enum-type-handler: org.apache.ibatis.type.EnumOrdinalTypeHandler
