@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class question_detail {
+public class Question_detail {
 
 	// id自增, 题目question_id, 题目内容content
 	private Long id;

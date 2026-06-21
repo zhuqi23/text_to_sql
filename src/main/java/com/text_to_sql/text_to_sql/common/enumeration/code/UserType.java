@@ -1,5 +1,6 @@
 package com.text_to_sql.text_to_sql.common.enumeration.code;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.text_to_sql.text_to_sql.common.enumeration.CodeBasedEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,4 +27,10 @@ public enum UserType implements CodeBasedEnum {
         }
         throw new IllegalArgumentException("Invalid user type code: " + code);
     }
+
+	@Override
+	@JsonValue
+	public Integer getCode() {
+		return code;
+	}
 }

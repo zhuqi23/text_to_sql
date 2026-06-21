@@ -11,16 +11,16 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class solution {
+public class Knowledge {  // 知识点
 
-	// id自增, 题目id, 题解content, 创建人id, 修改人id, 创建时间, 修改时间
 	private Long id;
-	private Long questionId;
-	private String content;
 
-	private LocalDateTime createTime;
-	private LocalDateTime updateTime;
+	// 知识点名称
+	private String name;
+
+	// 创建人id, 修改人id, 创建时间, 修改时间
 	private Long createUser;
 	private Long updateUser;
-
+	private LocalDateTime createTime;
+	private LocalDateTime updateTime;
 }

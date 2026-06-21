@@ -7,6 +7,10 @@ import org.mybatis.spring.boot.autoconfigure.ConfigurationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * MyBatis 配置类
+ * 配置枚举类型处理器
+ */
 @Configuration
 public class MyBatisConfig {
 

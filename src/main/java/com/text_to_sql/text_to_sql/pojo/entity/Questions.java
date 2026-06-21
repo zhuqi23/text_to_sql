@@ -1,5 +1,6 @@
 package com.text_to_sql.text_to_sql.pojo.entity;
 
+import com.text_to_sql.text_to_sql.common.enumeration.code.Difficulty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,12 +12,12 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class question_knowledge {
+public class Questions {
 
-	// id自增, 题目id, 知识点id, 创建人id, 修改人id, 创建时间, 修改时间
+	// id自增, 题目名称title, 难度(0~3其他简单中等困难)difficulty, 创建人id, 创建时间, 修改时间, 修改人id
 	private Long id;
-	private Long questionId;
-	private Long knowledgeId;
+	private String title;
+	private Difficulty difficulty;
 
 	private LocalDateTime createTime;
 	private LocalDateTime updateTime;

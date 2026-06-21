@@ -1,5 +1,6 @@
 package com.text_to_sql.text_to_sql.common.result;
 
+import com.text_to_sql.text_to_sql.common.enumeration.ErrorCodeEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -28,6 +29,20 @@ public class Result<T> implements Serializable {
 		Result result = new Result();
 		result.msg = msg;
 		result.code = 0;
+		return result;
+	}
+
+	public static <T> Result<T> error(ErrorCodeEnum errorCodeEnum) {
+		Result result = new Result();
+		result.code = errorCodeEnum.getCode();
+		result.msg = errorCodeEnum.getMessage();
+		return result;
+	}
+
+	public static <T> Result<T> error(Integer code, String msg) {
+		Result result = new Result();
+		result.code = code;
+		result.msg = msg;
 		return result;
 	}
 

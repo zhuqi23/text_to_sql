@@ -90,3 +90,7 @@ CREATE TABLE `question_knowledge` (
     CONSTRAINT `fk_qk_create` FOREIGN KEY (`create_user`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT `fk_qk_update` FOREIGN KEY (`update_user`) REFERENCES `user` (`id`) ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='题目知识点关联表';
+
+
+-- 插入用户数据
+INSERT INTO `user` (`account`, `password`, `name`, `type`, `create_time`) VALUES ('admin', 'admin', '管理员', 1, NOW());
