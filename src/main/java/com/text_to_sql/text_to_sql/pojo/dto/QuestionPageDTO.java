@@ -1,13 +1,17 @@
 package com.text_to_sql.text_to_sql.pojo.dto;
 
 import com.text_to_sql.text_to_sql.common.enumeration.code.Difficulty;
+import lombok.Data;
 
-public class QuestionPageQueryDTO {
+import java.util.List;
+
+@Data
+public class QuestionPageDTO {
 	private Integer page;
 	private Integer pageSize;
 
 	private String title;
 	private Difficulty difficulty;
-	private String name;  // 知识点名称
+	private List<Long> knowledge;  // 知识点名称
 
 }

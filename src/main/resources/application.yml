@@ -16,6 +16,9 @@ spring:
     # 时间格式, 这样前端拿到的时间格式是 yyyy-MM-dd HH:mm:ss
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+  mvc:
+    favicon:
+      enabled: false
 
 mybatis:
   #mapper配置文件
@@ -23,7 +26,7 @@ mybatis:
   mapper-locations: classpath:mapper/*.xml
   # 2. type-aliases-package: 类型别名包，XML中可以直接写类名而不需要全限
   type-aliases-package: com.text_to_sql.text_to_sql.pojo.entity
-  # 3. type-handlers-package: 自动扫描并注册自定义的 TypeHandler
+  # 3. type-handlers-package: 已在 MyBatisConfig 中手动注册，无需配置
 #  type-handlers-package: com.text_to_sql.text_to_sql.handler
   configuration:
     # 4. 开启驼峰命名: user_name -> userName

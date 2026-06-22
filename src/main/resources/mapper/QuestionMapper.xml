@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.text_to_sql.text_to_sql.mapper.QuestionMapper">
+
+    <select id="page" resultType="com.text_to_sql.text_to_sql.pojo.vo.QuestionListVO">
+        SELECT
+            q.id,
+            q.title,
+            q.difficulty
+        FROM questions q
+        <where>
+            <if test="title != null and title != ''">
+                AND q.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="difficulty != null">
+                AND q.difficulty = #{difficulty}
+            </if>
+            <if test="knowledge != null and knowledge.size() > 0">
+                AND q.id IN (
+                    SELECT DISTINCT qk.question_id
+                    FROM question_knowledge qk
+                    WHERE qk.knowledge_id IN
+                    <foreach collection="knowledge" item="kid" open="(" separator="," close=")">
+                        #{kid}
+                    </foreach>
+                )
+            </if>
+        </where>
+        ORDER BY q.id DESC
+    </select>
+
+</mapper>

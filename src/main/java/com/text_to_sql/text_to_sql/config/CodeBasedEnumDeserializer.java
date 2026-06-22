@@ -10,17 +10,24 @@ import com.text_to_sql.text_to_sql.common.enumeration.CodeBasedEnum;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
-/**
- * 自定义枚举类型反序列化器
- * 用于前端->后端时反序列化, 将前端的数字转为枚举对象
- */
 public class CodeBasedEnumDeserializer extends JsonDeserializer<CodeBasedEnum> implements ContextualDeserializer {
 
 	private Class<?> targetClass;
 
 	@Override
 	public CodeBasedEnum deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
-		Integer code = p.getValueAsInt();
+		String value = p.getValueAsString();
+		
+		if (value == null || value.isEmpty()) {
+			return null;
+		}
+
+		Integer code;
+		try {
+			code = Integer.parseInt(value);
+		} catch (NumberFormatException e) {
+			throw new IOException("Invalid enum code: " + value, e);
+		}
 
 		try {
 			Method fromCodeMethod = targetClass.getMethod("fromCode", Integer.class);

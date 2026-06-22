@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.text_to_sql.text_to_sql.mapper.SubmitMapper">
+
+    <resultMap id="SubmitResultMap" type="com.text_to_sql.text_to_sql.pojo.entity.Submit">
+        <id property="id" column="id"/>
+        <result property="questionId" column="question_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="content" column="content"/>
+        <result property="judgment" column="judgment"/>
+        <result property="judgeId" column="judge_id"/>
+        <result property="analysis" column="analysis"/>
+        <result property="submitTime" column="submit_time"/>
+        <result property="judgmentTime" column="judgment_time"/>
+    </resultMap>
+
+    <select id="page" resultType="com.text_to_sql.text_to_sql.pojo.vo.SubmitListVO">
+        SELECT
+            s.submit_time AS submitTime,
+            s.id,
+            q.title,
+            u.name,
+            s.judgment,
+            s.judgment_time AS judgmentTime
+        FROM submit s
+        LEFT JOIN questions q ON s.question_id = q.id
+        LEFT JOIN user u ON s.user_id = u.id
+        <where>
+            <if test="questionId != null">
+                AND s.question_id = #{questionId}
+            </if>
+            <if test="userId != null">
+                AND s.user_id = #{userId}
+            </if>
+            <if test="judgment != null">
+                AND s.judgment = #{judgment}
+            </if>
+            <if test="title != null and title != ''">
+                AND q.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+        </where>
+        ORDER BY s.submit_time DESC
+    </select>
+
+
+</mapper>

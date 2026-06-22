@@ -24,6 +24,18 @@ public enum ErrorCodeEnum {
 	// ========== 题目相关错误 (4xxxx) ==========
 	QUESTION_NOT_FOUND(40001, "题目不存在"),
 
+	// ========== 提交相关错误 (5xxxx) ==========
+	SUBMIT_NOT_FOUND(50001, "提交不存在"),
+
+	// ========== 用户相关错误 (6xxxx) ==========
+	USER_NOT_FOUND(60001, "用户不存在"),
+	INVALID_PASSWORD(60002, "密码错误"),
+	INVALID_USER_TYPE(60003, "用户类型不匹配"),
+	ACCOUNT_ALREADY_EXISTS(60004, "账号已存在"),
+	REGISTER_FAILED(60005, "注册失败"),
+	TOKEN_INVALID(60006, "令牌无效或已过期"),
+	TOKEN_MISSING(60007, "缺少认证令牌"),
+
 	// ========== 系统错误 (5xxxx) ==========
 	SYSTEM_ERROR(50001, "服务器错误");
 

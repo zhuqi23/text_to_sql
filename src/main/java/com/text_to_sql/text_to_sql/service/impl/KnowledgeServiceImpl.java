@@ -50,7 +50,7 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	 * 添加知识点
 	 * @param name 知识点名称
 	 *
-	 * todo 添加和修改需要AOP修改人, 登录当前用户人
+	 * todo 需要AOP完成设置修改人为当前用户
 	 */
 	@Override
 	public void add(String name) {

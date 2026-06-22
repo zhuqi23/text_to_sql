@@ -15,9 +15,7 @@ public class EnumTypeTransformationTest {
     @Autowired
     private QuestionMapper questionMapper;
 
-	// TODO 还未测试枚举转换
-	// todo 创建插入查询mapper后测试数据库枚举转换
-	// todo 测试前后端枚举转换
+	// 前后端枚举转换, 数据库枚举转换完成
 
     /**
      * 测试 UserType 枚举转换

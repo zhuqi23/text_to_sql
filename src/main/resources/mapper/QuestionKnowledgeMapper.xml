@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.text_to_sql.text_to_sql.mapper.QuestionKnowledgeMapper">
+
+    <select id="getKnowledgeByQuestionId" resultType="com.text_to_sql.text_to_sql.pojo.vo.KnowledgeListVO">
+        SELECT k.id AS id, k.name AS name
+        FROM question_knowledge qk
+        JOIN knowledge k ON qk.knowledge_id = k.id
+        WHERE qk.question_id = #{id}
+    </select>
+
+    <select id="getKnowledgeByQuestionIds" resultType="com.text_to_sql.text_to_sql.pojo.vo.KnowledgeBatchListVO">
+        SELECT
+            k.id AS id,
+            k.name AS name,
+            qk.question_id AS questionId
+        FROM question_knowledge qk
+        LEFT JOIN knowledge k ON qk.knowledge_id = k.id
+        WHERE qk.question_id IN
+        <foreach collection="questionIds" item="qid" open="(" separator="," close=")">
+            #{qid}
+        </foreach>
+        ORDER BY qk.question_id
+    </select>
+</mapper>
