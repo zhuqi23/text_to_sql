@@ -1,7 +1,6 @@
-package com.text_to_sql.text_to_sql.pojo.entity;
+package com.text_to_sql.text_to_sql.pojo.vo;
 
 import com.text_to_sql.text_to_sql.common.enumeration.code.UserStatus;
-import com.text_to_sql.text_to_sql.common.enumeration.code.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,14 +12,13 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class UserListVO {
 
 	private Long id;
 	private String account;
-	private String password;
 	private String name;
-	private UserType type;
+	private String type;
 	private UserStatus status;
-
 	private LocalDateTime createTime;
+
 }

@@ -33,8 +33,10 @@ public enum ErrorCodeEnum {
 	INVALID_USER_TYPE(60003, "用户类型不匹配"),
 	ACCOUNT_ALREADY_EXISTS(60004, "账号已存在"),
 	REGISTER_FAILED(60005, "注册失败"),
-	TOKEN_INVALID(60006, "令牌无效或已过期"),
-	TOKEN_MISSING(60007, "缺少认证令牌"),
+	USERNAME_ALREADY_EXISTS(60006, "用户名已存在"),
+	USER_BLACKLISTED(60007, "用户已被拉黑"),
+	TOKEN_INVALID(60008, "令牌无效或已过期"),
+	TOKEN_MISSING(60009, "缺少认证令牌"),
 
 	// ========== 系统错误 (5xxxx) ==========
 	SYSTEM_ERROR(50001, "服务器错误");

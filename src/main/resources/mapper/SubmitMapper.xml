@@ -21,10 +21,12 @@
             q.title,
             u.name,
             s.judgment,
-            s.judgment_time AS judgmentTime
+            s.judgment_time AS judgmentTime,
+            judge.name AS judgeName
         FROM submit s
         LEFT JOIN questions q ON s.question_id = q.id
         LEFT JOIN user u ON s.user_id = u.id
+        LEFT JOIN user judge ON s.judge_id = judge.id
         <where>
             <if test="questionId != null">
                 AND s.question_id = #{questionId}
@@ -37,6 +39,12 @@
             </if>
             <if test="title != null and title != ''">
                 AND q.title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="judgeId != null">
+                AND s.judge_id = #{judgeId}
+            </if>
+            <if test="judgeName != null and judgeName != ''">
+                AND judge.name LIKE CONCAT('%', #{judgeName}, '%')
             </if>
         </where>
         ORDER BY s.submit_time DESC

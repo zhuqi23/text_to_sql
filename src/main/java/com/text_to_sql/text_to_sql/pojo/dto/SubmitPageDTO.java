@@ -13,4 +13,6 @@ public class SubmitPageDTO {
 	private Long userId;
 	private Judgment judgment;
 	private String title;
+	private Long judgeId;
+	private String judgeName;
 }

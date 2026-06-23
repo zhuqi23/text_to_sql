@@ -6,14 +6,27 @@
         SELECT
             q.id,
             q.title,
-            q.difficulty
+            q.difficulty,
+            q.create_time,
+            u.name AS create_name
         FROM questions q
+        LEFT JOIN user u ON q.create_user = u.id
         <where>
             <if test="title != null and title != ''">
                 AND q.title LIKE CONCAT('%', #{title}, '%')
             </if>
             <if test="difficulty != null">
                 AND q.difficulty = #{difficulty}
+            </if>
+            <if test="createId != null">
+                AND q.create_user = #{createId}
+            </if>
+            <if test="name != null and name != ''">
+                AND q.create_user IN (
+                    SELECT u.id
+                    FROM user u
+                    WHERE u.name LIKE CONCAT('%', #{name}, '%')
+                )
             </if>
             <if test="knowledge != null and knowledge.size() > 0">
                 AND q.id IN (

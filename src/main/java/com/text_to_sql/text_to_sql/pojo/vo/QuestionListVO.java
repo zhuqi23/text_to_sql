@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -18,4 +19,6 @@ public class QuestionListVO {
 	private String title;
 	private Difficulty difficulty;
 	private List<KnowledgeListVO> knowledge;
+	private LocalDateTime createTime;
+	private String createName;
 }

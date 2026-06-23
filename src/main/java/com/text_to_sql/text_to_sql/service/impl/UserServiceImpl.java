@@ -1,13 +1,20 @@
 package com.text_to_sql.text_to_sql.service.impl;
 
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.text_to_sql.text_to_sql.common.enumeration.ErrorCodeEnum;
+import com.text_to_sql.text_to_sql.common.enumeration.code.UserStatus;
 import com.text_to_sql.text_to_sql.common.enumeration.code.UserType;
+import com.text_to_sql.text_to_sql.common.result.PageResult;
 import com.text_to_sql.text_to_sql.exception.BusinessException;
 import com.text_to_sql.text_to_sql.mapper.UserMapper;
 import com.text_to_sql.text_to_sql.pojo.dto.LoginDTO;
 import com.text_to_sql.text_to_sql.pojo.dto.RegisterDTO;
+import com.text_to_sql.text_to_sql.pojo.dto.UserPageDTO;
+import com.text_to_sql.text_to_sql.pojo.dto.UserUpdateDTO;
 import com.text_to_sql.text_to_sql.pojo.entity.User;
 import com.text_to_sql.text_to_sql.pojo.vo.LoginVO;
+import com.text_to_sql.text_to_sql.pojo.vo.UserListVO;
 import com.text_to_sql.text_to_sql.service.UserService;
 import com.text_to_sql.text_to_sql.util.JwtUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -34,9 +41,9 @@ public class UserServiceImpl implements UserService {
 			throw new BusinessException(ErrorCodeEnum.USER_NOT_FOUND);
 		}
 
-//		if (!user.getType().equals(loginDTO.getType())) {
-//			throw new BusinessException(ErrorCodeEnum.INVALID_USER_TYPE);
-//		}
+		if (user.getStatus().equals(UserStatus.BANNED)) {
+			throw new BusinessException(ErrorCodeEnum.USER_BLACKLISTED);
+		}
 
 		// 密码加密, 数据库中管理员的密码是明文, 普通用户的密码是加密的
 		String password = loginDTO.getPassword();
@@ -62,9 +69,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	@Transactional
 	public LoginVO register(RegisterDTO registerDTO) {
-		User existingUser = userMapper.findByAccount(registerDTO.getAccount());
-		if (existingUser != null) {
+		if (userMapper.isExistsByAccount(registerDTO.getAccount())) {
 			throw new BusinessException(ErrorCodeEnum.ACCOUNT_ALREADY_EXISTS);
+		}
+		if (userMapper.isExistsByName(registerDTO.getName())) {
+			throw new BusinessException(ErrorCodeEnum.USERNAME_ALREADY_EXISTS);
 		}
 
 		User newUser = User.builder()
@@ -72,6 +81,7 @@ public class UserServiceImpl implements UserService {
 				.password(encryptPassword(registerDTO.getPassword()))
 				.name(registerDTO.getName())
 				.type(UserType.USER)
+				.status(UserStatus.NORMAL)
 				.createTime(LocalDateTime.now())
 				.build();
 
@@ -94,6 +104,28 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public User getUserById(Long userId) {
 		return userMapper.findById(userId);
+	}
+
+	@Override
+	public PageResult list(UserPageDTO userPageDTO) {
+		if (userPageDTO.getPage() == null || userPageDTO.getPage() <= 0) {
+			userPageDTO.setPage(1);
+		}
+		if (userPageDTO.getPageSize() == null || userPageDTO.getPageSize() <= 0) {
+			userPageDTO.setPageSize(10);
+		}
+
+		PageHelper.startPage(userPageDTO.getPage(), userPageDTO.getPageSize());
+		Page<UserListVO> page = userMapper.page(userPageDTO);
+		return new PageResult(page.getTotal(), page.getResult());
+	}
+
+	@Override
+	public void update(UserUpdateDTO userUpdateDTO) {
+		if (userUpdateDTO.getPassword() != null) {
+			userUpdateDTO.setPassword(encryptPassword(userUpdateDTO.getPassword()));
+		}
+		userMapper.update(userUpdateDTO);
 	}
 
 	// 密码加密

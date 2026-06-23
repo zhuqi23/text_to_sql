@@ -21,4 +21,5 @@ public class SubmitListVO {
 	private String name;  // 提交人name
 	private Judgment judgment;
 	private LocalDateTime judgmentTime;
+	private String judgeName;  // 判断人name
 }

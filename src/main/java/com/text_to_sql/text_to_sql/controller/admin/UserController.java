@@ -1,8 +1,12 @@
 package com.text_to_sql.text_to_sql.controller.admin;
 
+import com.github.pagehelper.Page;
+import com.text_to_sql.text_to_sql.common.result.PageResult;
 import com.text_to_sql.text_to_sql.common.result.Result;
 import com.text_to_sql.text_to_sql.pojo.dto.LoginDTO;
 import com.text_to_sql.text_to_sql.pojo.dto.RegisterDTO;
+import com.text_to_sql.text_to_sql.pojo.dto.UserPageDTO;
+import com.text_to_sql.text_to_sql.pojo.dto.UserUpdateDTO;
 import com.text_to_sql.text_to_sql.pojo.entity.User;
 import com.text_to_sql.text_to_sql.pojo.vo.LoginVO;
 import com.text_to_sql.text_to_sql.service.UserService;
@@ -13,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/user")
@@ -86,5 +92,26 @@ public class UserController {
 		// tokenBlacklistService.addToBlacklist(token);
 
 		return Result.success("退出登录成功");
+	}
+
+	/**
+	 * 获取用户列表
+	 */
+	@PostMapping("/list")
+	@Operation(summary = "获取用户列表", description = "获取所有用户列表")
+	public Result<PageResult> list(@RequestBody UserPageDTO userPageDTO) {
+		log.info("获取用户列表, 参数: {}", userPageDTO);
+		return Result.success(userService.list(userPageDTO));
+	}
+
+	/**
+	 * 修改用户内容
+	 */
+	@PostMapping("/update")
+	@Operation(summary = "修改用户内容", description = "修改用户内容")
+	public Result update(@RequestBody UserUpdateDTO userUpdateDTO) {
+		log.info("修改用户内容, 参数: {}", userUpdateDTO);
+		userService.update(userUpdateDTO);
+		return Result.success();
 	}
 }

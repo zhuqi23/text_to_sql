@@ -13,5 +13,6 @@ public class QuestionPageDTO {
 	private String title;
 	private Difficulty difficulty;
 	private List<Long> knowledge;  // 知识点名称
-
+	private String name;  // 创建者名称
+	private Long createId;
 }

@@ -39,7 +39,7 @@ public class SubmitServiceImpl implements SubmitService {
 	private UserMapper userMapper;
 
 	@Override
-	public PageResult page(SubmitPageDTO submitPageDTO) {
+	public PageResult page(SubmitPageDTO submitPageDTO) {  // 前端用户页面必须传入用户ID, 也可管理端查看所有提交记录
 		if (submitPageDTO.getPage() == null || submitPageDTO.getPage() <= 0) {
 			submitPageDTO.setPage(1);
 		}
@@ -47,7 +47,7 @@ public class SubmitServiceImpl implements SubmitService {
 			submitPageDTO.setPageSize(10);
 		}
 
-		log.info("分页查询提交列表，页码：{}，每页大小：{}", submitPageDTO.getPage(), submitPageDTO.getPageSize());
+		log.info("分页查询参数：{}", submitPageDTO);
 
 		PageHelper.startPage(submitPageDTO.getPage(), submitPageDTO.getPageSize());
 		Page<SubmitListVO> page = submitMapper.page(submitPageDTO);
