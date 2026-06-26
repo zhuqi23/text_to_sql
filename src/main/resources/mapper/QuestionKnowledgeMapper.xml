@@ -2,6 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.text_to_sql.text_to_sql.mapper.QuestionKnowledgeMapper">
+    <insert id="insertBatch">
+        INSERT INTO question_knowledge (question_id, knowledge_id, create_time, update_time, create_user, update_user) VALUES
+        <foreach item="item" index="index" collection="questionKnowledgeList" separator=",">
+            (#{item.questionId}, #{item.knowledgeId}, #{item.createTime}, #{item.updateTime}, #{item.createUser}, #{item.updateUser})
+        </foreach>
+    </insert>
 
     <select id="getKnowledgeByQuestionId" resultType="com.text_to_sql.text_to_sql.pojo.vo.KnowledgeListVO">
         SELECT k.id AS id, k.name AS name

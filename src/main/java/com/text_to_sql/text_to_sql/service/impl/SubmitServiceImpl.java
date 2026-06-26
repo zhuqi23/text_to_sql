@@ -4,25 +4,28 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.text_to_sql.text_to_sql.common.enumeration.ErrorCodeEnum;
+import com.text_to_sql.text_to_sql.common.enumeration.code.Judgment;
+import com.text_to_sql.text_to_sql.common.enumeration.code.Review;
 import com.text_to_sql.text_to_sql.common.result.PageResult;
+import com.text_to_sql.text_to_sql.common.result.Result;
 import com.text_to_sql.text_to_sql.exception.BusinessException;
 import com.text_to_sql.text_to_sql.mapper.QuestionKnowledgeMapper;
 import com.text_to_sql.text_to_sql.mapper.QuestionMapper;
 import com.text_to_sql.text_to_sql.mapper.SubmitMapper;
 import com.text_to_sql.text_to_sql.mapper.UserMapper;
+import com.text_to_sql.text_to_sql.pojo.dto.SubmitDTO;
 import com.text_to_sql.text_to_sql.pojo.dto.SubmitPageDTO;
+import com.text_to_sql.text_to_sql.pojo.dto.SubmitUpdateDTO;
 import com.text_to_sql.text_to_sql.pojo.entity.Questions;
 import com.text_to_sql.text_to_sql.pojo.entity.Submit;
-import com.text_to_sql.text_to_sql.pojo.vo.KnowledgeListVO;
-import com.text_to_sql.text_to_sql.pojo.vo.SubmitDetailVO;
-import com.text_to_sql.text_to_sql.pojo.vo.SubmitListVO;
+import com.text_to_sql.text_to_sql.pojo.vo.*;
 import com.text_to_sql.text_to_sql.service.SubmitService;
 import com.text_to_sql.text_to_sql.util.UserContext;
 import lombok.extern.slf4j.Slf4j;
-import org.glassfish.jaxb.runtime.v2.runtime.reflect.ListTransducedAccessorImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -86,6 +89,65 @@ public class SubmitServiceImpl implements SubmitService {
 				.analysis(submit.getAnalysis())
 				.submitTime(submit.getSubmitTime())
 				.judgmentTime(submit.getJudgmentTime())
+				.review(submit.getReview())
 				.build();
+	}
+
+	@Override
+	public SubmitVO submit(SubmitDTO submitDTO) {
+		// 判断分析
+		JudgeVO judgeVO = aiJudge(submitDTO);
+
+		// 保存提交
+		Submit submit = Submit.builder()
+				.questionId(submitDTO.getQuestionId())
+				.userId(UserContext.getUserId())
+				.content(submitDTO.getContent())
+				.judgment(judgeVO.getJudgment())
+				.judgeId(3L)  // 默认机器判断, id=3是系统判题
+				.analysis(judgeVO.getAnalysis())
+				.submitTime(submitDTO.getSubmitTime())
+				.judgmentTime(LocalDateTime.now())
+				.review(Review.NORMAL)
+				.build();
+
+		submitMapper.insert(submit);
+
+		// 返回
+		return SubmitVO.builder()
+				.id(submit.getId())
+				.judgment(judgeVO.getJudgment())
+				.analysis(judgeVO.getAnalysis())
+				.judgeUser(userMapper.getNameById(judgeVO.getJudgeId()))
+				.judgmentTime(submit.getJudgmentTime())
+				.build();
+	}
+
+	@Override
+	public void review(Long submitId) {
+		Submit submit = Submit.builder()
+				.id(submitId)
+				.review(Review.REVIEW_REQUESTED)
+				.build();
+
+		submitMapper.update(submit);
+	}
+
+	@Override
+	public void update(SubmitUpdateDTO submitUpdateDTO) {
+		Submit submit = submitMapper.getById(submitUpdateDTO.getId());
+
+		submit.setJudgeId(UserContext.getUserId());
+		submit.setJudgment(submitUpdateDTO.getJudgment());
+		submit.setAnalysis(submitUpdateDTO.getAnalysis());
+		submit.setReview(Review.NORMAL);
+		submit.setJudgmentTime(LocalDateTime.now());
+
+		submitMapper.update(submit);
+	}
+
+	private JudgeVO aiJudge(SubmitDTO submitDTO) {
+		// 机器判断
+		return null;
 	}
 }

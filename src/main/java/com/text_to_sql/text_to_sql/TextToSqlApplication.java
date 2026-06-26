@@ -13,7 +13,7 @@ public class TextToSqlApplication {
 	}
 
 }
-// todo 6.23: 现在完成前端管理页面(完成对题目/知识点/的增删改查), 完成前端的新增题目/题目详情页面, 再完成提交部分
-// todo 所有list改为Get, 搜索由前端完成(不一定可以, 可以就能存redis)
-// todo 接下来就是连接python的ai
-// todo 现在要开发完题目
+// todo 后端基本完成(没具体测试, 但应该没问题), 除了调用python, 转redis,
+//  将所有list/page改为Get, 搜索由前端完成(不一定可以, 可以就能存redis)
+// todo 前端还差: 题目详情页面, 新增/修改题目页面, 知识点的修改, 提交记录新增review, ...
+// todo 总: 后端, 前端, python连接, ai, redis

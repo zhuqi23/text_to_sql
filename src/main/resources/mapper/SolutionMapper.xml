@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.text_to_sql.text_to_sql.mapper.SolutionMapper">
+
+    <update id="update">
+        UPDATE solution
+        <set>
+            <if test="content != null">
+                content = #{content},
+            </if>
+            update_user = #{updateUser},
+            update_time = #{updateTime}
+        </set>
+        WHERE id = #{id}
+    </update>
+
+</mapper>

@@ -1,6 +1,7 @@
 package com.text_to_sql.text_to_sql.pojo.dto;
 
 import com.text_to_sql.text_to_sql.common.enumeration.code.Judgment;
+import com.text_to_sql.text_to_sql.common.enumeration.code.Review;
 import lombok.Data;
 
 @Data
@@ -15,4 +16,5 @@ public class SubmitPageDTO {
 	private String title;
 	private Long judgeId;
 	private String judgeName;
+	private Review review;
 }

@@ -7,12 +7,34 @@
         <result property="questionId" column="question_id"/>
         <result property="userId" column="user_id"/>
         <result property="content" column="content"/>
-        <result property="judgment" column="judgment"/>
+        <result property="judgment" column="judgment" javaType="com.text_to_sql.text_to_sql.common.enumeration.code.Judgment"/>
         <result property="judgeId" column="judge_id"/>
         <result property="analysis" column="analysis"/>
         <result property="submitTime" column="submit_time"/>
         <result property="judgmentTime" column="judgment_time"/>
+        <result property="review" column="review" javaType="com.text_to_sql.text_to_sql.common.enumeration.code.Review"/>
     </resultMap>
+    <update id="update">
+        UPDATE submit
+        <set>
+            <if test="judgment != null">
+                judgment = #{judgment},
+            </if>
+            <if test="judgeId != null">
+                judge_id = #{judgeId},
+            </if>
+            <if test="analysis != null and analysis != ''">
+                analysis = #{analysis},
+            </if>
+            <if test="judgmentTime != null">
+                judgment_time = #{judgmentTime},
+            </if>
+            <if test="review != null">
+                review = #{review},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
 
     <select id="page" resultType="com.text_to_sql.text_to_sql.pojo.vo.SubmitListVO">
         SELECT
@@ -22,7 +44,8 @@
             u.name,
             s.judgment,
             s.judgment_time AS judgmentTime,
-            judge.name AS judgeName
+            judge.name AS judgeName,
+            s.review
         FROM submit s
         LEFT JOIN questions q ON s.question_id = q.id
         LEFT JOIN user u ON s.user_id = u.id
@@ -45,6 +68,9 @@
             </if>
             <if test="judgeName != null and judgeName != ''">
                 AND judge.name LIKE CONCAT('%', #{judgeName}, '%')
+            </if>
+            <if test="review != null">
+                AND s.review = #{review}
             </if>
         </where>
         ORDER BY s.submit_time DESC

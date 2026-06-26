@@ -16,6 +16,10 @@ spring:
     # 时间格式, 这样前端拿到的时间格式是 yyyy-MM-dd HH:mm:ss
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
+    # 允许空字符串转换为 null
+    deserialization:
+      accept-empty-string-as-null-object: true
+
   mvc:
     favicon:
       enabled: false

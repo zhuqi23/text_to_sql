@@ -3,9 +3,12 @@ package com.text_to_sql.text_to_sql.controller.admin;
 import com.github.pagehelper.PageInfo;
 import com.text_to_sql.text_to_sql.common.result.PageResult;
 import com.text_to_sql.text_to_sql.common.result.Result;
+import com.text_to_sql.text_to_sql.pojo.dto.SubmitDTO;
 import com.text_to_sql.text_to_sql.pojo.dto.SubmitPageDTO;
+import com.text_to_sql.text_to_sql.pojo.dto.SubmitUpdateDTO;
 import com.text_to_sql.text_to_sql.pojo.vo.SubmitDetailVO;
 import com.text_to_sql.text_to_sql.pojo.vo.SubmitListVO;
+import com.text_to_sql.text_to_sql.pojo.vo.SubmitVO;
 import com.text_to_sql.text_to_sql.service.SubmitService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -55,13 +58,42 @@ public class SubmitController {
 
 	/**
 	 * 提交判断
-	 *
+	 * 提交后是机器判题
 	 * @param
 	 * @return 提交列表
 	 */
 	@PostMapping("/submit")
 	@Operation(summary = "提交判断", description = "提交解答分析后返回")
-	public Result submit() {
-		return Result.success();
+	public Result<SubmitVO> submit(@RequestBody SubmitDTO submitDTO) {
+		log.info("提交判断, 参数：{}", submitDTO);
+		return Result.success(submitService.submit(submitDTO));
+	}
+
+	/**
+	 * 提交复审
+	 * 复审: 此处用户点击发送后修改数据库, 没有返回, 等管理员提交修改后返回内容
+	 * 修改review而已
+	 * @param
+	 * @return 提交列表
+	 */
+	@PostMapping("/review")
+	@Operation(summary = "提交复审", description = "复审提交")
+	public Result review(Long submitId) {
+		log.info("提交复审, 提交参数：{}", submitId);
+		submitService.review(submitId);
+		return Result.success("已提交复核, 请耐心等待");
+	}
+
+	/**
+	 * 修改提交
+	 * 无论如何修改后review都是正常
+	 * @return 提交列表
+	 */
+	@PostMapping("/update")
+	@Operation(summary = "修改提交", description = "修改提交")
+	public Result update(@RequestBody SubmitUpdateDTO submitUpdateDTO) {
+		log.info("修改提交，参数：{}", submitUpdateDTO);
+		submitService.update(submitUpdateDTO);
+		return Result.success("修改完成");
 	}
 }

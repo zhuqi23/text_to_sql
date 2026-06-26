@@ -1,7 +1,6 @@
-package com.text_to_sql.text_to_sql.pojo.entity;
+package com.text_to_sql.text_to_sql.pojo.vo;
 
 import com.text_to_sql.text_to_sql.common.enumeration.code.Judgment;
-import com.text_to_sql.text_to_sql.common.enumeration.code.Review;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,16 +12,12 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Submit {
+public class SubmitVO {
 
-	private Long id;
-	private Long questionId;
-	private Long userId;
-	private String content;
+	private Long id;  // 提交ID
 	private Judgment judgment;
-	private Long judgeId;
 	private String analysis;
-	private LocalDateTime submitTime;
+
+	private String judgeUser;
 	private LocalDateTime judgmentTime;
-	private Review review;
 }

@@ -2,6 +2,7 @@ package com.text_to_sql.text_to_sql.pojo.vo;
 
 import com.text_to_sql.text_to_sql.common.enumeration.code.Difficulty;
 import com.text_to_sql.text_to_sql.common.enumeration.code.Judgment;
+import com.text_to_sql.text_to_sql.common.enumeration.code.Review;
 import lombok.Builder;
 import lombok.Data;
 
@@ -26,4 +27,5 @@ public class SubmitDetailVO {
 	private String judgeName;
 	private String analysis;
 	private LocalDateTime judgmentTime;
+	private Review review;
 }

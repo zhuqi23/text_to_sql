@@ -49,8 +49,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 	/**
 	 * 添加知识点
 	 * @param name 知识点名称
-	 *
-	 * todo 需要AOP完成设置修改人为当前用户
 	 */
 	@Override
 	public void add(String name) {
@@ -64,10 +62,6 @@ public class KnowledgeServiceImpl implements KnowledgeService {
 		}
 		Knowledge knowledge = Knowledge.builder()
 				.name(name)
-				.createTime(LocalDateTime.now())
-				.updateTime(LocalDateTime.now())
-				.createUser(1L)
-				.updateUser(1L)
 				.build();
 		knowledgeMapper.insert(knowledge);
 	}
