@@ -86,4 +86,16 @@ public class QuestionController {
 		log.info("机器出题，参数：{}", machineDTO);
 		return Result.success(questionService.machine(machineDTO));
 	}
+
+	/**
+	 * 智能答题 answer
+	 * 不添加到数据库, 只是返回给前端
+	 * 传来title, knowledge, content
+	 */
+	@PostMapping("/answer")
+	@Operation(summary = "智能答题", description = "智能答题")
+	public Result<MachineVO> answer(@RequestBody MachineDTO machineDTO) {
+		log.info("智能答题，参数：{}", machineDTO);
+		return Result.success(questionService.answer(machineDTO));
+	}
 }

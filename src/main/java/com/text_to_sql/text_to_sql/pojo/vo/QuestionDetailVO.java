@@ -20,6 +20,7 @@ public class QuestionDetailVO {
 	private Difficulty difficulty;
 	private List<KnowledgeListVO> knowledge;
 	private String content;
+	private String answer;
 
 	private String createUser;
 	private LocalDateTime createTime;

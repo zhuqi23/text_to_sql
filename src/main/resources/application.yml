@@ -19,6 +19,8 @@ spring:
     # 允许空字符串转换为 null
     deserialization:
       accept-empty-string-as-null-object: true
+    # 全局命名策略：后端Java用驼峰，JSON传输用下划线
+    property-naming-strategy: SNAKE_CASE
 
   mvc:
     favicon:

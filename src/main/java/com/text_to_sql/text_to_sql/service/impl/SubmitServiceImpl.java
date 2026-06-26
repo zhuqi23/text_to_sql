@@ -148,6 +148,10 @@ public class SubmitServiceImpl implements SubmitService {
 
 	private JudgeVO aiJudge(SubmitDTO submitDTO) {
 		// 机器判断
-		return null;
+		return JudgeVO.builder()
+				.judgeId(3L)
+				.judgment(Judgment.CORRECT)
+				.analysis("机器判题结果")
+				.build();
 	}
 }

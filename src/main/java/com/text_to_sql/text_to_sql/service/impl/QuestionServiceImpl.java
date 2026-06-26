@@ -157,6 +157,8 @@ public class QuestionServiceImpl implements QuestionService {
 		Questions questions = questionMapper.getById(id);
 		String content = questionMapper.getContentById(id);
 		List<KnowledgeListVO> knowledge = questionKnowledgeMapper.getKnowledgeByQuestionId(id);
+		List<Solution> solutions = solutionMapper.getByQuestionId(id);
+		String answer = solutions.isEmpty() ? null : solutions.get(0).getContent();
 
 		return QuestionDetailVO.builder()
 				.id(questions.getId())
@@ -164,6 +166,7 @@ public class QuestionServiceImpl implements QuestionService {
 				.difficulty(questions.getDifficulty())
 				.knowledge(knowledge)
 				.content(content)
+				.answer(answer)
 				.createUser(userMapper.getNameById(questions.getCreateUser()))
 				.createTime(questions.getCreateTime())
 				.updateUser(userMapper.getNameById(questions.getUpdateUser()))
@@ -176,10 +179,21 @@ public class QuestionServiceImpl implements QuestionService {
 		return aiGenerate(machineDTO);
 	}
 
+	@Override
+	public MachineVO answer(MachineDTO machineDTO) {
+		return aiAnswer(machineDTO);
+	}
+
 	private MachineVO aiGenerate(MachineDTO machineDTO) {
 		return MachineVO.builder()
 				.title("机器出题")
 				.content("机器出题")
+				.answer("机器出题")
+				.build();
+	}
+
+	private MachineVO aiAnswer(MachineDTO machineDTO) {
+		return MachineVO.builder()
 				.answer("机器出题")
 				.build();
 	}

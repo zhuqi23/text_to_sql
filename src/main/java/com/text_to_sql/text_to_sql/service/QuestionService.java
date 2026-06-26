@@ -18,4 +18,6 @@ public interface QuestionService {
 	QuestionDetailVO get(Long id);
 
 	MachineVO machine(MachineDTO machineDTO);
+
+	MachineVO answer(MachineDTO machineDTO);
 }
