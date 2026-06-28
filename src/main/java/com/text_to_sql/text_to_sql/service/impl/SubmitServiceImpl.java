@@ -1,18 +1,18 @@
 package com.text_to_sql.text_to_sql.service.impl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import com.text_to_sql.text_to_sql.common.agent.PythonAgent;
 import com.text_to_sql.text_to_sql.common.enumeration.ErrorCodeEnum;
 import com.text_to_sql.text_to_sql.common.enumeration.code.Judgment;
 import com.text_to_sql.text_to_sql.common.enumeration.code.Review;
 import com.text_to_sql.text_to_sql.common.result.PageResult;
 import com.text_to_sql.text_to_sql.common.result.Result;
 import com.text_to_sql.text_to_sql.exception.BusinessException;
-import com.text_to_sql.text_to_sql.mapper.QuestionKnowledgeMapper;
-import com.text_to_sql.text_to_sql.mapper.QuestionMapper;
-import com.text_to_sql.text_to_sql.mapper.SubmitMapper;
-import com.text_to_sql.text_to_sql.mapper.UserMapper;
+import com.text_to_sql.text_to_sql.mapper.*;
 import com.text_to_sql.text_to_sql.pojo.dto.SubmitDTO;
 import com.text_to_sql.text_to_sql.pojo.dto.SubmitPageDTO;
 import com.text_to_sql.text_to_sql.pojo.dto.SubmitUpdateDTO;
@@ -39,7 +39,11 @@ public class SubmitServiceImpl implements SubmitService {
 	@Autowired
 	private QuestionKnowledgeMapper questionKnowledgeMapper;
 	@Autowired
+	private SolutionMapper solutionMapper;
+	@Autowired
 	private UserMapper userMapper;
+	@Autowired
+	private PythonAgent pythonAgent;
 
 	@Override
 	public PageResult page(SubmitPageDTO submitPageDTO) {  // 前端用户页面必须传入用户ID, 也可管理端查看所有提交记录
@@ -147,11 +151,34 @@ public class SubmitServiceImpl implements SubmitService {
 	}
 
 	private JudgeVO aiJudge(SubmitDTO submitDTO) {
-		// 机器判断
-		return JudgeVO.builder()
-				.judgeId(3L)
-				.judgment(Judgment.CORRECT)
-				.analysis("机器判题结果")
-				.build();
+		String result = pythonAgent.judgeSqlAnswer(
+				questionMapper.getContentById(submitDTO.getQuestionId()),
+				solutionMapper.getByQuestionId(submitDTO.getQuestionId()).get(0).getContent(),
+				submitDTO.getContent()
+		);
+		log.info("机器判断结果：{}", result);
+
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(result);
+
+			String judgmentStr = jsonNode.has("judgment") ? jsonNode.get("judgment").asText() : "";
+			String analysis = jsonNode.has("analysis") ? jsonNode.get("analysis").asText() : "";
+
+			Judgment judgment = "正确".equals(judgmentStr) ? Judgment.CORRECT : Judgment.WRONG;
+
+			return JudgeVO.builder()
+					.judgeId(3L)
+					.judgment(judgment)
+					.analysis(analysis)
+					.build();
+		} catch (Exception e) {
+			log.error("解析AI判题结果失败: {}", e.getMessage(), e);
+			return JudgeVO.builder()
+					.judgeId(3L)
+					.judgment(Judgment.WRONG)
+					.analysis("解析AI结果失败: " + result)
+					.build();
+		}
 	}
 }

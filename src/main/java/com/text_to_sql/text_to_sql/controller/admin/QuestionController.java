@@ -96,6 +96,6 @@ public class QuestionController {
 	@Operation(summary = "智能答题", description = "智能答题")
 	public Result<MachineVO> answer(@RequestBody MachineDTO machineDTO) {
 		log.info("智能答题，参数：{}", machineDTO);
-		return Result.success(questionService.answer(machineDTO));
+		return Result.success(questionService.analysis(machineDTO));
 	}
 }

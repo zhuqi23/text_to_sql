@@ -3,4 +3,11 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.text_to_sql.text_to_sql.mapper.KnowledgeMapper">
 
+    <select id="getKnowledgeNames" resultType="java.lang.String">
+        select name from knowledge
+        where id in
+        <foreach item="id" collection="list" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </select>
 </mapper>

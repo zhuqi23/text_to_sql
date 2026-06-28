@@ -40,6 +40,7 @@
         SELECT
             s.submit_time AS submitTime,
             s.id,
+            s.question_id AS questionId,
             q.title,
             u.name,
             s.judgment,

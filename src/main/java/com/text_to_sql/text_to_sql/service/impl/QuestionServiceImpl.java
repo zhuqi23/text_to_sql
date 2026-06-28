@@ -3,13 +3,11 @@ package com.text_to_sql.text_to_sql.service.impl;
 import com.alibaba.druid.sql.parser.SQLParserFeature;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.text_to_sql.text_to_sql.common.agent.PythonAgent;
 import com.text_to_sql.text_to_sql.common.annotation.AutoFill;
 import com.text_to_sql.text_to_sql.common.enumeration.OperationType;
 import com.text_to_sql.text_to_sql.common.result.PageResult;
-import com.text_to_sql.text_to_sql.mapper.QuestionKnowledgeMapper;
-import com.text_to_sql.text_to_sql.mapper.QuestionMapper;
-import com.text_to_sql.text_to_sql.mapper.SolutionMapper;
-import com.text_to_sql.text_to_sql.mapper.UserMapper;
+import com.text_to_sql.text_to_sql.mapper.*;
 import com.text_to_sql.text_to_sql.pojo.dto.MachineDTO;
 import com.text_to_sql.text_to_sql.pojo.dto.QuestionDTO;
 import com.text_to_sql.text_to_sql.pojo.dto.QuestionPageDTO;
@@ -20,6 +18,8 @@ import com.text_to_sql.text_to_sql.pojo.entity.Solution;
 import com.text_to_sql.text_to_sql.pojo.vo.*;
 import com.text_to_sql.text_to_sql.service.QuestionService;
 import com.text_to_sql.text_to_sql.util.UserContext;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,9 +41,13 @@ public class QuestionServiceImpl implements QuestionService {
 	@Autowired
 	private QuestionKnowledgeMapper questionKnowledgeMapper;
 	@Autowired
+	private KnowledgeMapper knowledgeMapper;
+	@Autowired
 	private SolutionMapper solutionMapper;
 	@Autowired
 	private UserMapper userMapper;
+	@Autowired
+	private PythonAgent pythonAgent;
 
 	@Override
 	public PageResult page(QuestionPageDTO questionPageDTO) {
@@ -176,26 +180,49 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Override
 	public MachineVO machine(MachineDTO machineDTO) {
-		return aiGenerate(machineDTO);
+
+		String result = pythonAgent.generateQuestion(
+				machineDTO.getDifficulty().getDescription(),
+				knowledgeMapper.getKnowledgeNames(machineDTO.getKnowledge()),
+				machineDTO.getOther()
+		);
+		log.info("生成题目: {}", result);
+
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readTree(result);
+
+			String title = jsonNode.has("title") ? jsonNode.get("title").asText() : "";
+			String question = jsonNode.has("question") ? jsonNode.get("question").asText() : "";
+			String analysis = jsonNode.has("analysis") ? jsonNode.get("analysis").asText() : "";
+
+			return MachineVO.builder()
+					.title(title)
+					.content(question)
+					.answer(analysis)
+					.build();
+		} catch (Exception e) {
+			log.error("解析AI返回的JSON失败: {}", e.getMessage(), e);
+			return MachineVO.builder()
+					.title("解析失败")
+					.content(result)
+					.answer("")
+					.build();
+		}
 	}
 
 	@Override
-	public MachineVO answer(MachineDTO machineDTO) {
-		return aiAnswer(machineDTO);
-	}
+	public MachineVO analysis(MachineDTO machineDTO) {
+		List<String> knowledge = knowledgeMapper.getKnowledgeNames(machineDTO.getKnowledge());
 
-	private MachineVO aiGenerate(MachineDTO machineDTO) {
+		String result = pythonAgent.generateAnswerAnalysis(knowledge, machineDTO.getContent());
+		log.info("生成题目解析: {}", result);
+
+		// 从result中提取答案
 		return MachineVO.builder()
-				.title("机器出题")
-				.content("机器出题")
-				.answer("机器出题")
+				.answer(result)
 				.build();
 	}
 
-	private MachineVO aiAnswer(MachineDTO machineDTO) {
-		return MachineVO.builder()
-				.answer("机器出题")
-				.build();
-	}
 
 }

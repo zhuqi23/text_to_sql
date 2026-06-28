@@ -19,5 +19,5 @@ public interface QuestionService {
 
 	MachineVO machine(MachineDTO machineDTO);
 
-	MachineVO answer(MachineDTO machineDTO);
+	MachineVO analysis(MachineDTO machineDTO);
 }

@@ -23,4 +23,6 @@ public interface KnowledgeMapper {
 
 	@Select("SELECT EXISTS(SELECT 1 FROM knowledge WHERE name = #{name})")
 	boolean isExistByName(String name);
+
+	List<String> getKnowledgeNames(List<Long> ids);
 }

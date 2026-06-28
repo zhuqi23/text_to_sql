@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -78,7 +79,7 @@ public class SubmitController {
 	 */
 	@PostMapping("/review")
 	@Operation(summary = "提交复审", description = "复审提交")
-	public Result review(Long submitId) {
+	public Result review(@RequestParam("submit_id") Long submitId) {
 		log.info("提交复审, 提交参数：{}", submitId);
 		submitService.review(submitId);
 		return Result.success("已提交复核, 请耐心等待");

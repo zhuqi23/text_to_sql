@@ -17,6 +17,7 @@ public class SubmitListVO {
 
 	private LocalDateTime submitTime;
 	private Long id;
+	private String questionId;
 	private String title;
 	private String name;  // 提交人name
 	private Judgment judgment;

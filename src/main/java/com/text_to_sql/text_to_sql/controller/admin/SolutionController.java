@@ -65,7 +65,7 @@ public class SolutionController {
 	 */
 	@GetMapping("/list")
 	@Operation(summary = "查询题解列表", description = "查询题解列表")
-	public Result<List<SolutionVO>> list(Long questionId) {
+	public Result<List<SolutionVO>> list(@RequestParam("question_id") Long questionId) {
 		log.info("查询题解列表，参数：{}", questionId);
 		return Result.success(solutionService.list(questionId));
 	}
